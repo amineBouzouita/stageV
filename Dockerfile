@@ -1,5 +1,2 @@
-# Use the official Nginx image as the base image
-FROM nginx:latest
-
-# Copy a custom HTML file to the Nginx default web server directory
-COPY index.html /usr/share/nginx/html/
+FROM php:7.4-apache
+COPY index.html /var/www/html/
