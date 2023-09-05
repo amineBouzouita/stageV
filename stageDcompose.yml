@@ -1,33 +1,18 @@
-version: '3.9'
-
+version: '3'
 services:
-  db:
-    image: mysql:5.7
-    volumes:
-      - db_data:/var/lib/mysql
-    restart: always
+  azure-vote-back:
+    image: mcr.microsoft.com/oss/bitnami/redis:6.0.8
+    container_name: azure-vote-back
     environment:
-      MYSQL_ROOT_PASSWORD: your_root_password
-      MYSQL_DATABASE: your_database_name
-      MYSQL_USER: your_wordpress_user
-      MYSQL_PASSWORD: your_wordpress_password
-
-  wordpress:
-    depends_on:
-      - db
-    image: wordpress:latest
+      ALLOW_EMPTY_PASSWORD: "yes"
     ports:
-      - "8000:80"
-    restart: always
-    environment:
-      WORDPRESS_DB_HOST: db:3306
-      WORDPRESS_DB_USER: your_wordpress_user
-      WORDPRESS_DB_PASSWORD: your_wordpress_password
-      WORDPRESS_DB_NAME: your_database_name
-      WORDPRESS_TABLE_PREFIX: wp_   # You can change the prefix if needed
-    volumes:
-      - wordpress_data:/var/www/html
+        - "6379:6379"
 
-volumes:
-  db_data:
-  wordpress_data:
+  azure-vote-front:
+    build: ./azure-vote
+    image: myregistry.azurecr.io/azure-vote-front
+    container_name: azure-vote-front
+    environment:
+      REDIS: azure-vote-back
+    ports:
+        - "80:80"
